@@ -1,5 +1,5 @@
 import {ChangeEvent, useState} from 'react';
-
+import {getAudioData} from '@remotion/media-utils';
 interface InputProps {
 	handleSend: (img: string, mp3: string) => void;
 }
@@ -22,6 +22,7 @@ function Input({handleSend}: InputProps) {
 		if (img && mp3) {
 			const imageUrl = URL.createObjectURL(img);
 			const mp3Url = URL.createObjectURL(mp3);
+
 			handleSend(imageUrl, mp3Url);
 		} else {
 			// Handle case where no files are selected (optional)

@@ -3,15 +3,19 @@ import {Composition} from 'remotion';
 import Canvas from './components/Canvas';
 import Input from './components/InPut'; // Fix the import statement for the Input component
 import {useState} from 'react';
-
+import {getAudioDurationInSeconds} from '@remotion/media-utils';
 export const RemotionRoot: React.FC = () => {
 	const [input, setInput] = useState(false);
 	const [selectedImage, setSelectedImage] = useState<string>();
 	const [selectedMp3, setSelectedMp3] = useState<string>();
-
-	const handleSend = (img: string, mp3: string) => {
+	const [seconds, getSeconds] = useState(0);
+	const handleSend = async (img: string, mp3: string) => {
+		const s = await getAudioDurationInSeconds(mp3);
 		setSelectedImage(img);
 		setSelectedMp3(mp3);
+
+		getSeconds(Math.floor(s));
+
 		if (img && mp3) {
 			setInput(true);
 		}
@@ -23,7 +27,7 @@ export const RemotionRoot: React.FC = () => {
 			<Composition
 				id="OnlyLogo"
 				component={Canvas}
-				durationInFrames={2750}
+				durationInFrames={seconds * 30}
 				fps={30}
 				width={1920}
 				height={1080}
@@ -33,6 +37,7 @@ export const RemotionRoot: React.FC = () => {
 				}}
 				// schema={myCompSchema2}
 			/>
+			{input && <Input handleSend={handleSend} />}
 		</>
 	) : (
 		// Pass the handleSend function to the Input component

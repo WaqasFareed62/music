@@ -5,11 +5,13 @@ import {
 	AbsoluteFill,
 	staticFile,
 	Audio,
+	Img,
 } from 'remotion';
 import styled from 'styled-components';
 import {useAudioData, visualizeAudio} from '@remotion/media-utils';
-import DropDots from './DropDots';
 
+import DropDots from './DropDots';
+const img = staticFile('logo.png');
 export interface CanvasProps {
 	selectedImage: string;
 	selectedMp3: string;
@@ -41,46 +43,10 @@ const Orb = styled.div`
 	flex-direction: column;
 `;
 
-const Text: React.FC<{
-	color: string;
-	transform: string;
-	blur: number;
-}> = ({color, transform, blur}) => {
-	const frame = useCurrentFrame();
-	const cool = (offset: number) => Math.sin((frame + offset) / 10);
-	return (
-		<AbsoluteFill
-			style={{
-				textAlign: 'center',
-				display: 'flex',
-				justifyContent: 'center',
-				alignItems: 'center',
-				color,
-				transform,
-				filter: `blur(${blur}px)`,
-			}}
-		>
-			<div
-				style={{
-					transform: `translateY(${cool(0) * 8}px)`,
-				}}
-			>
-				Waqas
-			</div>
-			<div
-				style={{
-					transform: `translateY(${cool(5) * 8}px)`,
-				}}
-			>
-				Fareed
-			</div>
-		</AbsoluteFill>
-	);
-};
 function Canvas({selectedImage, selectedMp3}: CanvasProps) {
 	const frame = useCurrentFrame();
 	const {width, height, fps} = useVideoConfig();
-	console.log(selectedMp3);
+
 	const audioData = useAudioData(selectedMp3);
 
 	if (!audioData) {
@@ -136,13 +102,8 @@ function Canvas({selectedImage, selectedMp3}: CanvasProps) {
 	const orbBackground = `rgb(${orbRgb}, ${orbRgb}, ${orbRgb})`;
 	const textColor = `rgba(${textRgb}, ${textRgb}, ${textRgb}, 0.8)`;
 
-	console.log(selectedImage);
 	const onlySeconds = circlesOut.filter((_x, i) => i % 2 === 0);
 	const circlesToUse = [...onlySeconds, ...onlySeconds];
-
-	// useEffect(() => {
-	// 	// Clean up the URLs when the component unmounts
-	// }, [selectedImage, selectedMp3]);
 
 	return (
 		<div style={{flex: 1}}>
@@ -161,6 +122,7 @@ function Canvas({selectedImage, selectedMp3}: CanvasProps) {
 				</AbsoluteFill>
 			</AbsoluteFill>
 			<Blur />
+			<h1 style={{color: 'white'}}>Time</h1>
 			<DropDots
 				opacity={night}
 				volume={interpolate(visualization[1], [0, 0.24], [0, 1], {
@@ -199,7 +161,7 @@ function Canvas({selectedImage, selectedMp3}: CanvasProps) {
 					return (
 						<div
 							style={{
-								backgroundColor: 'white',
+								backgroundColor: 'black',
 								height: 20,
 								width: 20,
 								borderRadius: 10,
@@ -217,29 +179,11 @@ function Canvas({selectedImage, selectedMp3}: CanvasProps) {
 						boxShadow: `0 0 50px ${transparentize(0.5, textColor)}`,
 					}}
 				>
-					<Text
-						blur={2}
-						color="rgba(255, 0, 0, 0.3)"
-						transform={`translateY(${-rgbEffect}px) translateX(${
-							rgbEffect * 2
-						}px)`}
-					/>
-					<Text
-						blur={2}
-						color="rgba(0, 255, 0, 0.3)"
-						transform={`translateX(${rgbEffect * 3}px) translateY(${
-							rgbEffect * 3
-						}px)`}
-					/>
-					<Text
-						blur={2}
-						color="rgba(0, 0, 255, 0.3)"
-						transform={`translateX(${-rgbEffect * 3}px)`}
-					/>
-					<Text
-						blur={0}
-						color={textColor}
-						transform={`translateY(${rgbEffect}px)`}
+					<Img
+						src={img}
+						style={{borderRadius: '50%'}}
+						height={'100%'}
+						width={'100%'}
 					/>
 				</Orb>
 			</FullSize>
